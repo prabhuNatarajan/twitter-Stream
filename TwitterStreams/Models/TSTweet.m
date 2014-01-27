@@ -10,10 +10,10 @@
 #import "NSArray+Enumerable.h"
 
 @interface TSTweet()
-@property (nonatomic, retain) TSUser* cachedUser;
-@property (nonatomic, retain) NSArray* cachedUserMentions;
-@property (nonatomic, retain) NSArray* cachedUrls;
-@property (nonatomic, retain) NSArray* cachedHashtags;
+@property (nonatomic, strong) TSUser* cachedUser;
+@property (nonatomic, strong) NSArray* cachedUserMentions;
+@property (nonatomic, strong) NSArray* cachedUrls;
+@property (nonatomic, strong) NSArray* cachedHashtags;
 @end
 
 @implementation TSTweet
@@ -23,14 +23,6 @@
 @synthesize cachedUrls=_cachedUrls;
 @synthesize cachedHashtags=_cachedHashtags;
 
-- (void)dealloc {
-    self.cachedUser = nil;
-    self.cachedUserMentions = nil;
-    self.cachedUrls = nil;
-    self.cachedHashtags = nil;
-    
-    [super dealloc];
-}
 
 - (NSString*)text {
     return [self.dictionary objectForKey:@"text"];
@@ -38,7 +30,7 @@
 
 - (TSUser*)user {
     if (!self.cachedUser)
-        self.cachedUser = [[[TSUser alloc] initWithDictionary:[self.dictionary objectForKey:@"user"]] autorelease];
+        self.cachedUser = [[TSUser alloc] initWithDictionary:[self.dictionary objectForKey:@"user"]];
     
     return self.cachedUser;
 }
@@ -46,7 +38,7 @@
 - (NSArray*)userMentions {
     if (!self.cachedUserMentions) {
         self.cachedUserMentions = [[self.dictionary valueForKeyPath:@"entities.user_mentions"] map:^id(NSDictionary* d) {
-            return [[[TSUser alloc] initWithDictionary:d] autorelease];
+            return [[TSUser alloc] initWithDictionary:d];
         }];
     }
     
@@ -56,7 +48,7 @@
 - (NSArray*)urls {
     if (!self.cachedUrls) {
         self.cachedUrls = [[self.dictionary valueForKeyPath:@"entities.urls"] map:^id(NSDictionary* d) {
-            return [[[TSUrl alloc] initWithDictionary:d] autorelease];
+            return [[TSUrl alloc] initWithDictionary:d];
         }];
     }
     
@@ -66,7 +58,7 @@
 - (NSArray*)hashtags {
     if (!self.cachedHashtags) {
         self.cachedHashtags = [[self.dictionary valueForKeyPath:@"entities.hashtags"] map:^id(NSDictionary* d) {
-            return [[[TSHashtag alloc] initWithDictionary:d] autorelease];
+            return [[TSHashtag alloc] initWithDictionary:d];
         }];
     }
     

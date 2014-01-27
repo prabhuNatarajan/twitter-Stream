@@ -20,12 +20,12 @@
 
 @interface ViewController ()
 
-@property (nonatomic, retain) ACAccountStore* accountStore;
-@property (nonatomic, retain) NSArray* accounts;
-@property (nonatomic, retain) ACAccount* account;
-@property (nonatomic, retain) NSMutableArray* tweets;
+@property (nonatomic, strong) ACAccountStore* accountStore;
+@property (nonatomic, strong) NSArray* accounts;
+@property (nonatomic, strong) ACAccount* account;
+@property (nonatomic, strong) NSMutableArray* tweets;
 
-@property (nonatomic, retain) TSStream* stream;
+@property (nonatomic, strong) TSStream* stream;
 
 @end
 
@@ -39,14 +39,6 @@
 @synthesize account=_account;
 @synthesize stream=_stream;
 
-- (void)dealloc {
-    self.accountStore = nil;
-    self.accounts = nil;
-    self.account = nil;
-    self.stream = nil;
-    
-    [super dealloc];
-}
 
 - (void)viewDidLoad
 {
@@ -56,11 +48,11 @@
     self.tweets = [NSMutableArray array];
     
     // Hide empty seperators
-    self.tableView.tableHeaderView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
-    self.tableView.tableFooterView = [[[UIView alloc] initWithFrame:CGRectZero] autorelease];
+    self.tableView.tableHeaderView = [[UIView alloc] initWithFrame:CGRectZero];
+    self.tableView.tableFooterView = [[UIView alloc] initWithFrame:CGRectZero];
     
     // Get access to their accounts
-    self.accountStore = [[[ACAccountStore alloc] init] autorelease];
+    self.accountStore = [[ACAccountStore alloc] init];
     ACAccountType *accountTypeTwitter = [self.accountStore accountTypeWithAccountTypeIdentifier:ACAccountTypeIdentifierTwitter];
     [self.accountStore requestAccessToAccountsWithType:accountTypeTwitter
                             withCompletionHandler:^(BOOL granted, NSError *error) {
@@ -68,19 +60,19 @@
                                     dispatch_sync(dispatch_get_main_queue(), ^{
                                         self.accounts = [self.accountStore accountsWithAccountType:accountTypeTwitter];
                                         if (self.accounts.count == 0) {
-                                            [[[[UIAlertView alloc] initWithTitle:nil
+                                            [[[UIAlertView alloc] initWithTitle:nil
                                                                          message:@"Please add a Twitter account in the Settings app"
                                                                         delegate:nil
                                                                cancelButtonTitle:@"OK"
-                                                               otherButtonTitles:nil] autorelease] show];
+                                                               otherButtonTitles:nil] show];
                                         }
                                         else {
                                             // Let them select the account they want to use
-                                            UIActionSheet* sheet = [[[UIActionSheet alloc] initWithTitle:@"Select your Twitter account:"
+                                            UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:@"Select your Twitter account:"
                                                                                                 delegate:self
                                                                                        cancelButtonTitle:nil
                                                                                   destructiveButtonTitle:nil
-                                                                                       otherButtonTitles:nil] autorelease];
+                                                                                       otherButtonTitles:nil];
                                             
                                             for (ACAccount* account in self.accounts) {
                                                 [sheet addButtonWithTitle:account.accountDescription];
@@ -95,11 +87,11 @@
                                 else {
                                     dispatch_sync(dispatch_get_main_queue(), ^{
                                         NSString* message = [NSString stringWithFormat:@"Error getting access to accounts : %@", [error localizedDescription]];
-                                        [[[[UIAlertView alloc] initWithTitle:nil
+                                        [[[UIAlertView alloc] initWithTitle:nil
                                                                      message:message
                                                                     delegate:nil
                                                            cancelButtonTitle:@"OK"
-                                                           otherButtonTitles:nil] autorelease] show];
+                                                           otherButtonTitles:nil] show];
                                     });
                                 }
                             }];
@@ -125,11 +117,11 @@
                 self.account = [self.accounts objectAtIndex:buttonIndex];
                 
                 // Stream options
-                UIActionSheet* sheet = [[[UIActionSheet alloc] initWithTitle:@"Select stream type:"
+                UIActionSheet* sheet = [[UIActionSheet alloc] initWithTitle:@"Select stream type:"
                                                                     delegate:self 
                                                            cancelButtonTitle:nil
                                                       destructiveButtonTitle:nil
-                                                           otherButtonTitles:@"User stream", @"Filter stream", nil] autorelease];
+                                                           otherButtonTitles:@"User stream", @"Filter stream",@"tweet", nil];
                 sheet.tag = 1;
                 [sheet showInView:self.view];
             }
@@ -142,25 +134,27 @@
             // Create a stream of the selected types
             switch (buttonIndex) {
                 case 0: {
-                    self.stream = [[[TSUserStream alloc] initWithAccount:self.account
+                    self.stream = [[TSUserStream alloc] initWithAccount:self.account
                                                              andDelegate:self
                                                            andAllReplies:YES
-                                                        andAllFollowings:YES] autorelease];
+                                                        andAllFollowings:YES];
                 }
                     break;
                     
                 case 1: {
-                    self.stream = [[[TSFilterStream alloc] initWithAccount:self.account
+                    self.stream = [[TSFilterStream alloc] initWithAccount:self.account
                                                                      andDelegate:self
-                                                                     andKeywords:[NSArray arrayWithObjects:@"grammy", @"life", nil]] autorelease];
+                                                                     andKeywords:[NSArray arrayWithObjects:@"grammy", @"life", nil]];
 
                 }
                     break;
+                case 2:{
+                    [self postImage];
+                }
             }
             
             if (self.stream)
                 [self.stream start];
-
         }
             break;
     }
@@ -216,7 +210,7 @@
     UITableViewCell* cell = [tableView dequeueReusableCellWithIdentifier:kCellIdentifier];
     if (!cell) {
         // Subtitle cell, with a bit of a tweak
-        cell = [[[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kCellIdentifier] autorelease];
+        cell = [[UITableViewCell alloc] initWithStyle:UITableViewCellStyleSubtitle reuseIdentifier:kCellIdentifier];
         cell.textLabel.font = [UIFont boldSystemFontOfSize:15];
         cell.detailTextLabel.numberOfLines = 0;
         cell.detailTextLabel.font = [UIFont systemFontOfSize:15];
@@ -254,7 +248,28 @@
     UIImage * image = [UIImage imageNamed:@"Default-568h@2x.png"];
     
     //add text
-    [postRequest addMultiPartData:[@"I just found the secret level!" dataUsingEncoding:NSUTF8StringEncoding] withName:@"status" type:@"multipart/form-data"];
+    [postRequest addMultiPartData:[@"I just found the secret level!!!!!!!!!!!!" dataUsingEncoding:NSUTF8StringEncoding] withName:@"status" type:@"multipart/form-data"];
+    //add image
+    [postRequest addMultiPartData:UIImagePNGRepresentation(image) withName:@"media" type:@"multipart/form-data"];
+    
+    // Set the account used to post the tweet.
+    [postRequest setAccount:self.account];
+    
+    // Perform the request created above and create a handler block to handle the response.
+    [postRequest performRequestWithHandler:^(NSData *responseData, NSHTTPURLResponse *urlResponse, NSError *error) {
+        NSString *output = [NSString stringWithFormat:@"HTTP response status: %i", [urlResponse statusCode]];
+        //[self performSelectorOnMainThread:@selector(displayText:) withObject:output waitUntilDone:NO];
+    }];
+}
+
+- (void)postImage
+{
+    TWRequest *postRequest = [[TWRequest alloc] initWithURL:[NSURL URLWithString:@"https://upload.twitter.com/1/statuses/update_with_media.json"] parameters:nil requestMethod:TWRequestMethodPOST];
+    
+    UIImage * image = [UIImage imageNamed:@"Default-568h@2x.png"];
+    
+    //add text
+    [postRequest addMultiPartData:[@"gorilaaaaaaaaaaaa I just found the secret level!!!!!!!!!!!!" dataUsingEncoding:NSUTF8StringEncoding] withName:@"status" type:@"multipart/form-data"];
     //add image
     [postRequest addMultiPartData:UIImagePNGRepresentation(image) withName:@"media" type:@"multipart/form-data"];
     

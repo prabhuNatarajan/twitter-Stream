@@ -7,7 +7,6 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		183F66DE18966A8C00971F60 /* JSONKit.m in Sources */ = {isa = PBXBuildFile; fileRef = 183F66DD18966A8C00971F60 /* JSONKit.m */; };
 		183F66E018966DEC00971F60 /* Default-568h@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 183F66DF18966DEC00971F60 /* Default-568h@2x.png */; };
 		E06A081215063DD800981F07 /* TSFriendsList.m in Sources */ = {isa = PBXBuildFile; fileRef = E06A080D15063DD800981F07 /* TSFriendsList.m */; };
 		E06A081315063DD800981F07 /* TSModel.m in Sources */ = {isa = PBXBuildFile; fileRef = E06A080F15063DD800981F07 /* TSModel.m */; };
@@ -37,8 +36,6 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
-		183F66DC18966A8C00971F60 /* JSONKit.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = JSONKit.h; sourceTree = "<group>"; };
-		183F66DD18966A8C00971F60 /* JSONKit.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = JSONKit.m; sourceTree = "<group>"; };
 		183F66DF18966DEC00971F60 /* Default-568h@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "Default-568h@2x.png"; sourceTree = "<group>"; };
 		E06A080C15063DD800981F07 /* TSFriendsList.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = TSFriendsList.h; sourceTree = "<group>"; };
 		E06A080D15063DD800981F07 /* TSFriendsList.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = TSFriendsList.m; sourceTree = "<group>"; };
@@ -219,8 +216,6 @@
 		E07C43701505BF2C006279FA /* JSONKit */ = {
 			isa = PBXGroup;
 			children = (
-				183F66DC18966A8C00971F60 /* JSONKit.h */,
-				183F66DD18966A8C00971F60 /* JSONKit.m */,
 			);
 			path = JSONKit;
 			sourceTree = "<group>";
@@ -295,7 +290,6 @@
 				E07C43631505BB6C006279FA /* main.m in Sources */,
 				E07C43651505BB6C006279FA /* ViewController.m in Sources */,
 				E07C436A1505BC12006279FA /* TSStream.m in Sources */,
-				183F66DE18966A8C00971F60 /* JSONKit.m in Sources */,
 				E07C437A1505BFA9006279FA /* TSUserStream.m in Sources */,
 				E07C43811505DA4F006279FA /* TSFilterStream.m in Sources */,
 				E06A081215063DD800981F07 /* TSFriendsList.m in Sources */,
@@ -379,6 +373,7 @@
 		E07C43511505BB3F006279FA /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ExampleApp/TwitterStreams-Prefix.pch";
 				INFOPLIST_FILE = "ExampleApp/TwitterStreams-Info.plist";
@@ -390,6 +385,7 @@
 		E07C43521505BB3F006279FA /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				CLANG_ENABLE_OBJC_ARC = YES;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
 				GCC_PREFIX_HEADER = "ExampleApp/TwitterStreams-Prefix.pch";
 				INFOPLIST_FILE = "ExampleApp/TwitterStreams-Info.plist";

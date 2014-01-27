@@ -12,6 +12,6 @@
 
 - (id)initWithDictionary:(NSDictionary*)dictionary;
 
-@property (nonatomic, retain) NSDictionary* dictionary;
+@property (nonatomic, strong) NSDictionary* dictionary;
 
 @end

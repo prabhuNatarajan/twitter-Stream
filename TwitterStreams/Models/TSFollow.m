@@ -11,11 +11,11 @@
 @implementation TSFollow
 
 - (TSUser*)source {
-    return [[[TSUser alloc] initWithDictionary:[self.dictionary objectForKey:@"source"]] autorelease];
+    return [[TSUser alloc] initWithDictionary:[self.dictionary objectForKey:@"source"]];
 }
 
 - (TSUser*)target {
-    return [[[TSUser alloc] initWithDictionary:[self.dictionary objectForKey:@"target"]] autorelease];
+    return [[TSUser alloc] initWithDictionary:[self.dictionary objectForKey:@"target"]];
 }
 
 @end

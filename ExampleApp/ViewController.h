@@ -12,7 +12,7 @@
 
 @interface ViewController : UIViewController<UIActionSheetDelegate, TSStreamDelegate>
 
-@property (nonatomic, assign) IBOutlet UITableView* tableView;
+@property (nonatomic, weak) IBOutlet UITableView* tableView;
 - (IBAction)tweet:(id)sender;
 
 @end
